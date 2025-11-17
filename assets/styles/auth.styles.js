@@ -1,0 +1,126 @@
+import { StyleSheet } from "react-native";
+
+export const getAuthStyles = (colors) => StyleSheet.create({
+  screen: {
+    flex: 1,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 20,
+  },
+  containerFull: {
+    backgroundColor: "rgba(27, 27, 39, 0.8)",
+    borderRadius: 18,
+    padding: 28,
+    margin: 8,
+    borderColor: colors.border,
+    borderWidth: 1,
+  },
+  illustration: {
+    height: 140,
+    borderRadius: 12,
+    marginBottom: 10,
+    backgroundColor: colors.subtleBackground,
+  },
+  titleLarge: {
+    fontSize: 28,
+    fontWeight: "800",
+    color: colors.text,
+    marginTop: 6,
+    textAlign: "center",
+  },
+  subLarge: {
+    color: colors.muted,
+    marginTop: 15,
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 16,
+  },
+  fieldRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.inputBackground,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    marginBottom: 12,
+    height: 52,
+    borderColor: colors.inputBorder,
+    borderWidth: 1,
+  },
+  input: {
+    flex: 1,
+    color: colors.text,
+    fontSize: 16,
+  },
+  eye: {
+    padding: 6,
+  },
+  socialRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 16,
+    marginVertical: 16,
+  },
+  socialBtn: {
+    width: 52,
+    height: 52,
+    borderRadius: 10,
+    backgroundColor: colors.subtleBackground,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  error: {
+    color: colors.danger,
+    marginTop: -4,
+    marginLeft: 4,
+    fontSize: 13,
+    marginBottom: 8,
+  },
+  back: {
+    position: "absolute",
+    left: 14,
+    top: 14,
+    padding: 6,
+    zIndex: 1,
+  },
+  inputLabel: {
+    fontSize: 14,
+    color: colors.muted,
+    marginBottom: 8,
+    marginTop: 8,
+  },
+  loginBtn: {
+    backgroundColor: colors.primary,
+    borderRadius: 14,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 4,
+    marginTop: 8,
+  },
+  loginTxt: {
+    color: colors.primaryButtonText,
+    fontWeight: "800",
+    fontSize: 16,
+  },
+  registerBtn: {
+    marginTop: 12,
+    backgroundColor: colors.secondaryButton,
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: "center",
+  },
+  registerTxt: {
+    color: colors.secondaryButtonText,
+    fontWeight: "700",
+  },
+  link: {
+    color: colors.primary,
+    fontWeight: "700",
+    textAlign: "center",
+    marginTop: 16,
+  }
+});
