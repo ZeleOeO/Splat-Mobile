@@ -1,3 +1,5 @@
+import { ApiResponse } from "@/types/response";
+import { Bill, User } from "@/types/types";
 import axios, { InternalAxiosRequestConfig } from "axios";
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
@@ -79,17 +81,18 @@ api.interceptors.response.use(
         const refreshToken = await SecureStore.getItemAsync("refresh_token");
         if (!refreshToken) throw new Error("No refresh token");
 
-        // Use plain axios (no interceptors) to avoid recursion
         const refreshResp = await axios.post(
           `${API_BASE}/auth/refresh`,
           { refresh_token: refreshToken },
           { headers: { "Content-Type": "application/json" } }
         );
 
-        const newAccessToken =
-          String(refreshResp.data?.data?.token ?? refreshResp.data?.token ?? refreshResp.data?.accessToken);
+        const newAccessToken = String(
+          refreshResp.data?.data?.token ??
+            refreshResp.data?.token ??
+            refreshResp.data?.accessToken
+        );
 
-        // persist and set in-memory
         await SecureStore.setItemAsync("token", newAccessToken);
         setAccessToken(newAccessToken);
 
@@ -116,5 +119,50 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export const login = async (username: string, password: string) => {
+  const response = await api.post("/auth/login", { username, password });
+  const { token, refresh_token } = response.data.data;
+  await SecureStore.setItemAsync("token", token);
+  await SecureStore.setItemAsync("refresh_token", refresh_token);
+  setAccessToken(token);
+  return response.data;
+};
+
+export const register = async (
+  username: string,
+  password: string,
+  first_name: string,
+  last_name: string
+) => {
+  const response = await api.post("/auth/register", {
+    username,
+    password,
+    first_name,
+    last_name,
+  });
+  return response.data;
+};
+
+export const forgotPassword = async (email: string) => {
+  const response = await api.post("/auth/forgot", { email });
+  return response.data;
+};
+
+export const resetPassword = async (token: string, password: string) => {
+  const response = await api.post("/auth/reset", { token, password });
+  return response.data;
+};
+
+export const getUserProfile = async (): Promise<User> => {
+  const response = await api.get<ApiResponse<User>>("/auth/me");
+  console.log("getUserProfile response:", response.data);
+  return response.data.data;
+}
+
+export const getBillsByUserId = async (): Promise<Bill[]> => {
+  const response = await api.get<ApiResponse<Bill[]>>(`/bills/user`);
+  return response.data.data;
+};
 
 export default api;

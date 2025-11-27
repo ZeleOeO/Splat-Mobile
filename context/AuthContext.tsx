@@ -1,10 +1,11 @@
-import api, { setAccessToken } from "@/constants/api";
+import { login as apiLogin, getUserProfile, setAccessToken } from "@/constants/api";
 import { THEMES } from "@/constants/colors";
+import { User } from "@/types/types";
 import * as SecureStore from "expo-secure-store";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { useError } from "../context/ErrorContext";
 
 
-type User = { id?: string; username?: string; email?: string } | null;
 export type ThemeName = keyof typeof THEMES;
 
 type AuthContextType = {
@@ -24,6 +25,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [theme, setThemeState] = useState<ThemeName>("earthyPastel"); // Default theme changed to modernDark
+  const { showError } = useError();
 
   const saveTokens = async (access: string | null, refresh: string | null) => {
     if (access) await SecureStore.setItemAsync("token", access);
@@ -41,11 +43,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const login = async (username: string, password: string) => {
-    const resp = await api.post("/auth/login", { username, password });
-    const token = String(resp.data?.data?.token ?? resp.data?.token ?? resp.data?.accessToken);
-    const refresh = String(resp.data?.data?.refresh_token ?? resp.data?.refresh_token ?? resp.data?.refreshToken ?? "");
-    await saveTokens(token, refresh || null);
-    await refreshUser();
+    try {
+      const loginResult = await apiLogin(username, password);
+      return loginResult;
+    } catch (error) {
+      showError("Error logging in. Please check your credentials.");
+      throw error; // Re-throw the error to propagate it
+    }
   };
 
   const logout = async () => {
@@ -65,10 +69,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const stored = await SecureStore.getItemAsync("token");
       if (stored) setAccessToken(stored);
 
-      const resp = await api.get("/auth/me");
-      // adapt to your backend response shape
-      setUser(resp.data?.user ?? resp.data ?? null);
-    } catch {
+        const fetchedUser = (await getUserProfile());
+        console.log("Fetched user profile:", fetchedUser);
+      setUser(fetchedUser); // Set user state
+      console.log("User set in state:", fetchedUser);
+    } catch (error: any) {
+      console.error("Error refreshing user:", error);
+      if (error.response) {
+        console.error("Error response data:", error.response.data);
+        console.error("Error response status:", error.response.status);
+      }
+      showError("An error occurred while fetching user data.");
       setUser(null);
     } finally {
       setIsLoading(false);

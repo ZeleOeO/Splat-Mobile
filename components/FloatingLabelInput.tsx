@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, StyleSheet, Animated } from 'react-native';
-import getColors from '@/constants/colors';
+import { getColors } from '@/constants/colors';
 import { useAuth } from '@/context/AuthContext';
 
 type FloatingLabelInputProps = {

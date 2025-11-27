@@ -1,4 +1,4 @@
-import api from "@/constants/api";
+import { forgotPassword } from "@/constants/api";
 import { getColors } from "@/constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -21,6 +21,7 @@ import {
 import * as Animatable from "react-native-animatable";
 import * as yup from "yup";
 import { useAuth } from "@/context/AuthContext";
+import { showVagueError } from "@/utils/errorUtils";
 
 const ForgotSchema = yup.object({
   email: yup.string().email("Invalid email").required("Email required"),
@@ -39,7 +40,7 @@ export default function ForgotScreen() {
   });
 
   const forgotMutation = useMutation<AxiosResponse<any>, Error, { email: string }>({
-    mutationFn: (values: { email: string }) => api.post("/auth/forgot", { email: values.email }),
+    mutationFn: (values: { email: string }) => forgotPassword(values.email),
     onSuccess: () => {
       Alert.alert(
         "Check your email",
@@ -48,8 +49,7 @@ export default function ForgotScreen() {
       router.replace("/auth/login");
     },
     onError: (err: any) => {
-      animRef.current?.shake?.(700);
-      Alert.alert("Error", err?.response?.data?.message ?? err?.message ?? "Request failed");
+      showVagueError(animRef, err);
     },
   });
 

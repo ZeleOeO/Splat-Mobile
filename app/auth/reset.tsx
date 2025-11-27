@@ -1,4 +1,4 @@
-import api from "@/constants/api";
+import { resetPassword } from "@/constants/api";
 import { getColors } from "@/constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -42,7 +42,7 @@ export default function ResetScreen() {
   });
 
   const resetMutation = useMutation<AxiosResponse<any>, Error, { password: string }>({
-    mutationFn: (values: { password: string }) => api.post("/auth/reset", { token, password: values.password }),
+    mutationFn: (values: { password: string }) => resetPassword(token as string, values.password),
     onSuccess: () => {
       Alert.alert("Password reset", "Your password has been updated. Please sign in.");
       router.replace("/auth/login");

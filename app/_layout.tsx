@@ -1,10 +1,21 @@
 import SafeScreen from "@/components/SafeScreen";
 import * as ColorConstants from "@/constants/colors";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
-import { QueryClient, QueryClientProvider, useIsFetching } from "@tanstack/react-query";
+import { ErrorProvider } from "@/context/ErrorContext";
+import {
+    QueryClient,
+    QueryClientProvider,
+    useIsFetching,
+} from "@tanstack/react-query";
 import { Slot } from "expo-router";
 import React from "react";
-import { ActivityIndicator, Dimensions, StyleSheet, Text, View } from "react-native";
+import {
+    ActivityIndicator,
+    Dimensions,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const client = new QueryClient();
@@ -45,7 +56,9 @@ function GlobalUI({ colors }: { colors: ColorConstants.ThemeColors }) {
     <View style={dynamicStyles.overlay} pointerEvents="auto">
       <View style={dynamicStyles.blurBox}>
         <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={dynamicStyles.loadingText}>{authLoading ? "Signing in..." : "Loading..."}</Text>
+        <Text style={dynamicStyles.loadingText}>
+          {authLoading ? "Signing in..." : "Loading..."}
+        </Text>
       </View>
     </View>
   ) : null;
@@ -70,16 +83,20 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: defaultColors.background }]}>
-        <QueryClientProvider client={client}>
-          <AuthProvider>
-            <ThemedApp />
-          </AuthProvider>
-        </QueryClientProvider>
-      </View>
+        <View
+          style={[
+            StyleSheet.absoluteFill,
+            { backgroundColor: defaultColors.background },
+          ]}
+        >
+          <QueryClientProvider client={client}>
+            <ErrorProvider>
+              <AuthProvider>
+                <ThemedApp />
+              </AuthProvider>
+            </ErrorProvider>
+          </QueryClientProvider>
+        </View>
     </SafeAreaProvider>
   );
 }
-
-
-

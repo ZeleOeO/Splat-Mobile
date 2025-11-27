@@ -1,4 +1,4 @@
-import api from "@/constants/api";
+import { register } from "@/constants/api";
 import { getColors } from "@/constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -66,12 +66,12 @@ export default function AccountStep() {
     { username: string; password: string }
   >({
     mutationFn: async (values: { username: string; password: string }) => {
-      return api.post("/auth/register", {
-        username: values.username,
-        password: values.password,
-        first_name: personalData.firstName ?? "",
-        last_name: personalData.lastName ?? "",
-      });
+      return register(
+        values.username,
+        values.password,
+        personalData.firstName ?? "",
+        personalData.lastName ?? ""
+      );
     },
     onSuccess: () => {
       import("@/utils/SignupStore").then((s) => s.clearSignupStore());

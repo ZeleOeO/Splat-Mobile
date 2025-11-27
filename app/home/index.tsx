@@ -2,10 +2,11 @@ import BalanceCard from "@/components/BalanceCard";
 import SafeScreen from "@/components/SafeScreen";
 import SplitCard from "@/components/SplitCard";
 import TopNav from "@/components/TopNav";
+import { getBillsByUserId } from "@/constants/api";
 import * as ColorConstants from "@/constants/colors";
 import { useAuth } from "@/context/AuthContext";
-import { mockSplits } from "@/mocks/MockSplits";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
@@ -16,27 +17,34 @@ import {
     View,
 } from "react-native";
 
-
 export default function HomeScreen() {
   const router = useRouter();
-  const { theme, user } = useAuth(); // Get user from auth context
+  const { theme, user } = useAuth();
   const colors = ColorConstants.getColors(theme);
   const styles = createStyles(colors);
 
-  const userName = user?.username || "John"; // Default to "John" if username is not available
+//   console.log("HomeScreen - user:", theme);
+  const userName = user?.user_name || "User";
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["billsByUser"],
+    queryFn: getBillsByUserId,
+  });
 
   return (
     <SafeScreen colors={colors}>
       <TopNav
-        onSetting={() => router.push("/home/settings")}
+        // onSetting={() => router.push("/home/settings")}
         onProfile={() => router.push("/home/profile")}
         colors={colors}
+        userName={user?.user_name || "User"}
       ></TopNav>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View
-          style={[styles.headerGradient, { backgroundColor: colors.background }]}
+          style={[
+            styles.headerGradient,
+            { backgroundColor: colors.background },
+          ]}
         >
-          <Text style={styles.greetingText}>Welcome back, {userName}!</Text>
           <Text style={styles.greetingSubText}>
             Here's an overview of your financial activity.
           </Text>
@@ -52,21 +60,25 @@ export default function HomeScreen() {
           />
 
           <View style={styles.sectionHeader}>
-            <MaterialCommunityIcons name="receipt" size={26} color={colors.icon} />
+            <MaterialCommunityIcons
+              name="receipt"
+              size={26}
+              color={colors.icon}
+            />
             <Text style={styles.subtitle}>Recent Splits</Text>
           </View>
-          {mockSplits.length > 0 ? (
+          {data && data.length > 0 ? (
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.horizontalSplitList}
             >
-              {mockSplits.map((split, idx) => (
+              {data.map((split, idx) => (
                 <View key={idx} style={styles.splitCardWrapper}>
                   <SplitCard
                     title={split.title}
-                    amount={split.amount}
-                    description={split.description}
+                    amount={split.total_amount}
+                    description={split.description? split.description : "No description"}
                     status={split.status}
                     category={split.category}
                     due_date={split.due_date}
@@ -79,7 +91,11 @@ export default function HomeScreen() {
             </ScrollView>
           ) : (
             <View style={styles.emptyStateContainer}>
-              <MaterialCommunityIcons name="information-outline" size={50} color={colors.muted} />
+              <MaterialCommunityIcons
+                name="information-outline"
+                size={50}
+                color={colors.muted}
+              />
               <Text style={styles.emptyStateText}>
                 No splits yet. Start by creating a new one!
               </Text>
@@ -87,7 +103,9 @@ export default function HomeScreen() {
                 style={styles.emptyStateButton}
                 onPress={() => console.log("Create New Split from Empty State")}
               >
-                <Text style={styles.emptyStateButtonText}>Create New Split</Text>
+                <Text style={styles.emptyStateButtonText}>
+                  Create New Split
+                </Text>
               </TouchableOpacity>
             </View>
           )}
@@ -107,7 +125,7 @@ const createStyles = (colors: ColorConstants.ThemeColors) =>
     },
     headerGradient: {
       paddingHorizontal: 20,
-      paddingTop: 60, // Adjust for status bar and top nav
+      paddingTop: 20, // Adjust for status bar and top nav
       borderBottomLeftRadius: 30,
       borderBottomRightRadius: 30,
       marginBottom: 20,
@@ -158,14 +176,14 @@ const createStyles = (colors: ColorConstants.ThemeColors) =>
     // Styles for an empty state or message
     emptyStateContainer: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       padding: 20,
     },
     emptyStateText: {
       color: colors.textLight,
       fontSize: 16,
-      textAlign: 'center',
+      textAlign: "center",
       marginTop: 10,
     },
     emptyStateButton: {
@@ -177,7 +195,7 @@ const createStyles = (colors: ColorConstants.ThemeColors) =>
     },
     emptyStateButtonText: {
       color: colors.onPrimary,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       fontSize: 16,
     },
-  })
+  });

@@ -427,6 +427,60 @@ const glacierTheme: ThemeColors = {
 };
 
 /* -----------------------------------------------------
+   7. Midnight Theme
+----------------------------------------------------- */
+
+const midnightTheme: ThemeColors = {
+  primary: "#4a4e69",
+  primaryVariant: "#2c2f3d",
+  secondary: "#9a8c98",
+  background: "#1a1a2e",
+  surface: "#252540",
+  error: "#ef233c",
+
+  onPrimary: "#ffffff",
+  onSecondary: "#ffffff",
+  onBackground: "#e0e0e0",
+  onSurface: "#e0e0e0",
+  onError: "#ffffff",
+
+  text: "#ffffff",
+  textLight: "#cccccc",
+  descriptionText: "#a0a0a0",
+
+  card: "#2c2c4d",
+  cardGradient: ["#3b3b5c", "#2c2c4d", "#202030"],
+  shadow: "rgba(0,0,0,0.5)",
+  border: "#5c5f80",
+  borderLight: "#7f849c",
+  inputBackground: "#35355a",
+  inputBorder: "#5c5f80",
+  icon: "#cccccc",
+  highlight: "#9a8c98",
+
+  primaryButton: "#5c5f80",
+  primaryButtonText: "#ffffff",
+  secondaryButton: "#9a8c98",
+  secondaryButtonText: "#ffffff",
+  dangerButton: "#ef233c",
+  dangerButtonText: "#ffffff",
+  disabled: "#35355a",
+  disabledText: "#7f849c",
+
+  positive: "#6a994e",
+  negative: "#ef233c",
+  due: "#f08a4c",
+  paid: "#6a994e",
+  success: "#6a994e",
+  warning: "#f08a4c",
+  info: "#5c5f80",
+
+  placeholder: "#7f849c",
+  muted: "#a0a0a0",
+  overlay: "rgba(0,0,0,0.7)",
+};
+
+/* -----------------------------------------------------
    Export Themes
 ----------------------------------------------------- */
 
@@ -436,8 +490,9 @@ export const THEMES = {
   botanical: botanicalTheme,
   vibrant: vibrantTheme,
   rustic: rusticTheme,
+  forest: forestTheme, // Forest before Glacier
   glacier: glacierTheme,
-  forest: forestTheme,
+  midnight: midnightTheme, // New midnight theme
 };
 
 /* -----------------------------------------------------

@@ -123,7 +123,7 @@ const BalanceCard: React.FC<BalanceCardProps> = ({
             color={colors.onPrimary}
           />
           <Text style={{ color: colors.onPrimary, marginLeft: 5, fontSize: 14 }}>
-            {showBalance ? "Hide Balance" : "Show Balance"}
+            {showBalance ? "Hide" : "Show"}
           </Text>
         </TouchableOpacity>
 

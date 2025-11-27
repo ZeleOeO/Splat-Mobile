@@ -5,7 +5,7 @@ import React, { useEffect, useRef } from "react";
 import { ActivityIndicator, Animated, StyleSheet } from "react-native";
 
 const checkAuth = async (): Promise<boolean> => {
-  let token = await SecureStore.getItemAsync("jwt_token");
+  let token = await SecureStore.getItemAsync("token");
   return !!token;
 };
 

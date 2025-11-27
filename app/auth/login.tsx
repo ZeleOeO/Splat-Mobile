@@ -46,6 +46,7 @@ export default function LoginScreen() {
   const loginMutation = useMutation<void, Error, { username: string; password: string }>({
     mutationFn: (data: { username: string; password: string }) => login(data.username, data.password),
     onSuccess: () => {
+      console.log("Login mutation SUCCESS - navigating to /home");
       router.replace("/home");
     },
     onError: () => {
